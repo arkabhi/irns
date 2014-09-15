@@ -1,0 +1,72 @@
+irns
+====
+
+SQL Scripts for Tables
+CREATE TABLE `category` (
+  `cat_id` int(11) NOT NULL AUTO_INCREMENT,
+  `cat_name` varchar(45) NOT NULL,
+  `cat_desc` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`cat_id`)
+);
+
+CREATE TABLE `sub_category` (
+  `sub_id` int(11) NOT NULL AUTO_INCREMENT,
+  `sub_name` varchar(45) NOT NULL,
+  `sub_priority` int(5) DEFAULT NULL,
+  `sub_cat_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`sub_id`),
+  KEY `category_idx` (`sub_cat_id`),
+  CONSTRAINT `subcategory_category` FOREIGN KEY (`sub_cat_id`) REFERENCES `category` (`cat_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+CREATE TABLE `user_type` (
+  `typ_id` int(11) NOT NULL AUTO_INCREMENT,
+  `typ_name` varchar(45) NOT NULL,
+  PRIMARY KEY (`typ_id`)
+);
+
+CREATE TABLE `user` (
+  `usr_id` int(11) NOT NULL AUTO_INCREMENT,
+  `usr_first_name` varchar(45) NOT NULL,
+  `usr_last_name` varchar(45) DEFAULT NULL,
+  `usr_user_name` varchar(45) NOT NULL,
+  `usr_pswd` varchar(45) NOT NULL,
+  `usr_typ_id` int(11) NOT NULL,
+  `usr_locked_fl` varchar(1) NOT NULL,
+  PRIMARY KEY (`usr_id`),
+  UNIQUE KEY `usr_user_name_UNIQUE` (`usr_user_name`),
+  KEY `user_user_type_idx` (`usr_typ_id`),
+  CONSTRAINT `user_user_type` FOREIGN KEY (`usr_typ_id`) REFERENCES `user_type` (`typ_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+CREATE TABLE `coordinate` (
+  `cor_id` int(11) NOT NULL AUTO_INCREMENT,
+  `cor_desc` varchar(45) DEFAULT NULL,
+  `cor_longitude` float(10,6) NOT NULL,
+  `cor_latitude` float(10,6) NOT NULL,
+  `cor_floor` int(4) DEFAULT NULL,
+  PRIMARY KEY (`cor_id`)
+);
+
+CREATE TABLE `place` (
+  `plc_id` int(11) NOT NULL AUTO_INCREMENT,
+  `plc_name` varchar(45) DEFAULT NULL,
+  `plc_desc` varchar(45) DEFAULT NULL,
+  `plc_extra1` varchar(45) DEFAULT NULL,
+  `plc_extra2` varchar(45) DEFAULT NULL,
+  `plc_cor_id` int(11) DEFAULT NULL,
+  `plc_sub_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`plc_id`),
+  KEY `location_idx` (`plc_cor_id`),
+  KEY `category_idx` (`plc_sub_id`),
+  CONSTRAINT `place_coordinate` FOREIGN KEY (`plc_cor_id`) REFERENCES `coordinate` (`cor_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `place_sub_category` FOREIGN KEY (`plc_sub_id`) REFERENCES `sub_category` (`sub_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+
+
+
+
+
+
+
